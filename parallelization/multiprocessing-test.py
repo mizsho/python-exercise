@@ -1,5 +1,5 @@
 # %%
-from multiprocessing import Process, Queue
+from multiprocessing import Process
 import numpy as np
 import time
 

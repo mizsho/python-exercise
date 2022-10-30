@@ -2,6 +2,9 @@
 
 ## `multiprocessing`
 
+参考になりそうなサイト
+- https://note.com/npaka/n/na95cfc0e494d#lumk6
+
 ### sleep関数のテスト
 
 意図通り並列的に動作することを確認。
