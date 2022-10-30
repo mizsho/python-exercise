@@ -51,3 +51,9 @@ source venv-3110/bin/activate
 ```Shell
 python -m pip install numpy pandas pexpect ipykernel
 ```
+
+## VSCodeの設定
+
+### VSCodeのPythonインタープリタを変更
+
+`Ctrl`+`Shift`+`P`でコマンドパレットを開き、`Select Interpreter`と入力。パスを選択する。例：`venv-3110/bin/python`
