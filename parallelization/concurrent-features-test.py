@@ -101,3 +101,40 @@ with futures.ProcessPoolExecutor(max_workers=2) as executor:
                 print("result", future.result())
 
 # %%
+# arrをグローバル変数にしたら、スレッド間でうまくメモリを共有できないのか実験
+
+# %%
+def calc_dist_max_idx(i1, i2):
+    # arr: (x,y)座標の列=>グローバル変数とする。
+    # i1, i2: arrのスライスインデックス
+    # 各点の組み合わせで距離を計算し、距離が最大のインデックスを返す。
+    dist = np.expand_dims(arr[i1:i2], axis=1) - np.expand_dims(arr[i1:i2], axis=0)
+    dist = np.sqrt(np.sum(dist**2, axis=2))
+    idx_dist_max = np.unravel_index(np.argmax(dist), dist.shape)
+    return idx_dist_max
+
+# %%
+# 並列化無しで、100点ごとに距離の最大値を計算
+# 実行時間：25.6s
+for i in range(10**pow_partial_arr):
+    result = calc_dist_max_idx(100*i, 100*(i+1))
+    if i<10: print(result)
+
+# %%
+# 並列化ありで、100点ごとに距離の最大値を計算
+# 実行時間：22.8s (なぜかmax_workers=2が一番早い)
+# 出力を順番に取り出せていることを確認.
+with futures.ThreadPoolExecutor(max_workers=4) as executor:
+    for i in range(10**(pow_partial_arr-1)):
+        list_future = []
+        for j in range(10):
+            future = executor.submit(
+                calc_dist_max_idx, 
+                1000*i+100*j,
+                1000*i+100*(j+1)
+                )
+            list_future.append(future)
+        (done, notdone) = futures.wait(list_future)
+        if i==0:
+            for future in list_future:
+                print("result", future.result())
