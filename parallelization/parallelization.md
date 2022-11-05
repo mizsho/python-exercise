@@ -23,9 +23,13 @@
 
 - `threadpoolctl`で直接スレッド数の設定が可能。
 
+    https://github.com/joblib/threadpoolctl
+
     ```python
     from threadpoolctl import threadpool_limits
     with threadpool_limits(limits=1, user_api='blas'):
+        a = np.random.randn(5000, 5000)
+        a_squared = a @ a
     ```
 
 ## `multiprocessing`
