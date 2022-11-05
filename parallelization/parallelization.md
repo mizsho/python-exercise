@@ -5,11 +5,28 @@
 そもそも前提として`numpy`で完結するような処理は並列処理される。
 メモリが足りず小分けにして処理するしかない計算の場合が問題になる。
 
-逆に`numpy`の並列処理(マルチスレッド処理)を制限しようと試みている解説記事。
-https://qiita.com/yymgt/items/b7f151ee99fb830ca64c
+### `numpy`で使われるスレッド数やライブラリを確認
 
-なんかいい記事見つけたかもと思ったけど違った。
-https://stackoverflow.com/questions/72289466/iterating-over-regions-of-numpy-array-in-parallel
+- スレッド数や使用ライブラリの確認は`threadpoolctl`で可能。
+インポートされたライブラリの情報が表示される。
+`'num_threads': 16`、`'internal_api': 'openblas'`と表示された。
+
+    ```python
+    from threadpoolctl import threadpool_info
+    import numpy as np
+    threadpool_info()
+    ```
+
+- 環境変数を用いたスレッド数の制御はこの解説記事が参考になりそう。
+
+    https://qiita.com/yymgt/items/b7f151ee99fb830ca64c
+
+- `threadpoolctl`で直接スレッド数の設定が可能。
+
+    ```python
+    from threadpoolctl import threadpool_limits
+    with threadpool_limits(limits=1, user_api='blas'):
+    ```
 
 ## `multiprocessing`
 
